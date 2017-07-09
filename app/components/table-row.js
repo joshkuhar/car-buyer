@@ -7,7 +7,13 @@ class Row extends React.Component {
     return (
         <tr>
           <td >
-            {this.props.amt}
+            Year {this.props.year}
+          </td>
+          <td >
+            {this.props.bought}
+          </td>
+          <td >
+            {this.props.saved}
           </td>
         </tr>
       )

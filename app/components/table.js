@@ -64,6 +64,13 @@ class Table extends React.Component {
         	{this.props.price}
         </div>
         <table>
+        	<thead>
+        		<tr>
+        			<th>Years</th>
+        			<th>Bought</th>
+        			<th>Kept</th>
+        		</tr>
+        	</thead>
 	        <TableList 
 						rate={this.props.rate}
 						amt={this.props.amt}

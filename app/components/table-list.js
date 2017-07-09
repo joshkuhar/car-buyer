@@ -15,7 +15,9 @@ class TableList extends React.Component {
 			return (
 				<Row 
 					key={i}
-					amt={r}
+					year={i}
+					bought={r}
+					saved='$2000'
 				/>
 				)
 		})
