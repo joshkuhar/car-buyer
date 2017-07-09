@@ -1,0 +1,41 @@
+
+body{
+  margin: 0;
+}
+h1 {
+  background-color: red;
+}
+.instructions{
+	background-color: lightgrey;
+}
+.questions{
+	background-color: aqua;
+}
+.call-to-action{
+	background-color: beige;
+}
+
+.entry-form{
+  text-align: center;
+}
+.question{
+
+}
+.v-input{
+
+}
+.form-submit-button{
+  display: block;
+  width: 5em;
+  margin: 0em auto;
+}
+.price{
+
+}
+.v-num{
+  
+}
+.borrowing{
+  color: red;
+  text-align: center;
+}
