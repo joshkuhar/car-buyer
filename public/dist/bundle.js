@@ -9799,9 +9799,8 @@ var Calculator = function (_React$Component) {
     _this.state = {
       currentValue: null,
       newValue: null,
-      price: null,
-      rate: 1.1,
-      amt: 100
+      rate: .04,
+      loanAmt: null
     };
     return _this;
   }
@@ -9813,7 +9812,7 @@ var Calculator = function (_React$Component) {
       this.setState({
         currentValue: cv,
         newValue: nv,
-        price: amountToBorrow
+        loanAmt: amountToBorrow
       });
     }
   }, {
@@ -9830,7 +9829,7 @@ var Calculator = function (_React$Component) {
           cv: this.state.currentValue,
           nv: this.state.newValue,
           rate: this.state.rate,
-          amt: this.state.amt
+          amt: this.state.loanAmt
         })
       );
     }
@@ -22499,47 +22498,11 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Table = function (_React$Component) {
   _inherits(Table, _React$Component);
 
-  function Table(props) {
+  function Table() {
     _classCallCheck(this, Table);
 
-    return _possibleConstructorReturn(this, (Table.__proto__ || Object.getPrototypeOf(Table)).call(this, props));
-    // this._onDelete = this._onDelete.bind(this)
-    // this.state = {
-    //   colors: []
-    // }
+    return _possibleConstructorReturn(this, (Table.__proto__ || Object.getPrototypeOf(Table)).apply(this, arguments));
   }
-  // _removeColor(colorId){
-  //   var colors = this.state.colors
-  //   for(var i in colors){
-  //     if(colorId == colors[i].id){
-  //       colors.splice(i, 1)
-  //     }
-  //   }
-  //   this.setState({
-  //     colors: colors
-  //   })    
-  // }
-  // _onDelete(colorId) {
-  //   fetch('/colors/'+colorId, { 
-  //     method: 'DELETE' 
-  //   })
-  //   .then( (res) => {
-  //     // With fetch, 500
-  //     // must be handled manually
-  //     if(!res.ok){
-  //       throw Error(res.statusText)
-  //     }
-  //     return res
-  //   })
-  //   .then( () => {
-  //     this._removeColor(colorId)
-  //     return
-  //   })
-  //   .catch( (err) => {
-  //     console.log(err)
-  //   })
-  // }
-
 
   _createClass(Table, [{
     key: 'render',
@@ -22661,6 +22624,9 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+//console.log( "The calculated payment is: " + 
+// pmt(interest_rate/100/payments_per_year, payments_per_year * years, -loan_amount)
+// .toFixed(2) );
 var TableList = function (_React$Component) {
 	_inherits(TableList, _React$Component);
 
@@ -22673,6 +22639,15 @@ var TableList = function (_React$Component) {
 	_createClass(TableList, [{
 		key: 'render',
 		value: function render() {
+			var nper = 36; //length of loan in months
+			var rate = 4.5 / 100 / 12; //interest rate per month
+			var pv = 10000; //present value of loan
+			function pmt(rate, nper, pv) {
+				var pvif = Math.pow(1 + rate, 36);
+				var pmt = rate / (pvif - 1) * -(pv * pvif);
+				return pmt;
+			}
+			console.log(pmt(rate, nper, -10000)); //make sure negative
 			var years = [];
 			var singleYear = this.props.rate * this.props.amt;
 			for (var i = 1; i < 21; i++) {
@@ -22682,7 +22657,7 @@ var TableList = function (_React$Component) {
 			var paidPerYear = years.map(function (r, i) {
 				return _react2.default.createElement(_tableRow2.default, {
 					key: i,
-					year: i,
+					year: i + 1,
 					bought: r,
 					saved: '$2000'
 				});
@@ -22703,7 +22678,7 @@ exports.default = TableList;
 /*
 
 
-
+P = rate per period (present value) / 1 - (1 + rate per period) - number of payments
 */
 
 /***/ }),

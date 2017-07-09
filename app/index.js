@@ -16,9 +16,8 @@ class Calculator extends React.Component {
     this.state = {
       currentValue: null,
       newValue: null,
-      price: null,
-      rate: 1.1,
-      amt: 100
+      rate: .04,
+      loanAmt: null
     }
   }
   _didClick(cv,nv){
@@ -26,7 +25,7 @@ class Calculator extends React.Component {
     this.setState({
       currentValue: cv,
       newValue: nv,
-      price: amountToBorrow
+      loanAmt: amountToBorrow
     })
   }
   render() {
@@ -40,7 +39,7 @@ class Calculator extends React.Component {
           cv={this.state.currentValue}
           nv={this.state.newValue}
           rate={this.state.rate}
-          amt={this.state.amt}
+          amt={this.state.loanAmt}
         />
       </div>
       )
