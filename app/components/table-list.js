@@ -28,7 +28,13 @@ class TableList extends React.Component {
 			}
 			return fv
 		}
-
+		
+		//Turn into formatted dollar string
+		function toDollars(num){
+			var num = parseFloat(num).toFixed(0)
+			var nextNum = Number(num).toLocaleString()
+			return nextNum
+		}
 
 		const years = []
 		const singleYear = pymt*12
@@ -36,15 +42,18 @@ class TableList extends React.Component {
 		for(var i=1;i<6;i++){
 
 			const rr = singleYear*i
+			const b = toDollars(rr)
 			const bought = parseFloat(rr).toFixed(2)
 
 			const invested = fv(ar,ih,rr)
 			const invested15 = fv(ar,ih-15,rr)
-			const diff = invested - invested15
-			const diffInvest = parseFloat(diff).toFixed(2)
+			const diff = toDollars(invested-invested15)
+
+			// const diffTo = parseFloat(diff).toFixed(2)
+			// const num = Number(diffInvest).toLocaleString()
 			years.push({
-				bought: bought, 
-				invested: diffInvest
+				bought: b, 
+				invested: diff
 			})
 		}
 

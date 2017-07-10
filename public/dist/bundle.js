@@ -22664,21 +22664,31 @@ var TableList = function (_React$Component) {
 				return fv;
 			}
 
+			//Turn into formatted dollar string
+			function toDollars(num) {
+				var num = parseFloat(num).toFixed(0);
+				var nextNum = Number(num).toLocaleString();
+				return nextNum;
+			}
+
 			var years = [];
 			var singleYear = pymt * 12;
 
 			for (var i = 1; i < 6; i++) {
 
 				var rr = singleYear * i;
+				var b = toDollars(rr);
 				var bought = parseFloat(rr).toFixed(2);
 
 				var invested = fv(ar, ih, rr);
 				var invested15 = fv(ar, ih - 15, rr);
-				var diff = invested - invested15;
-				var diffInvest = parseFloat(diff).toFixed(2);
+				var diff = toDollars(invested - invested15);
+
+				// const diffTo = parseFloat(diff).toFixed(2)
+				// const num = Number(diffInvest).toLocaleString()
 				years.push({
-					bought: bought,
-					invested: diffInvest
+					bought: b,
+					invested: diff
 				});
 			}
 
@@ -22757,12 +22767,16 @@ var Row = function (_React$Component) {
         _react2.default.createElement(
           'td',
           null,
-          this.props.bought
+          '$',
+          this.props.bought,
+          '.00'
         ),
         _react2.default.createElement(
           'td',
           null,
-          this.props.saved
+          '$',
+          this.props.saved,
+          '.00'
         )
       );
     }

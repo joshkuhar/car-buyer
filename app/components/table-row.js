@@ -10,10 +10,10 @@ class Row extends React.Component {
             Year {this.props.year}
           </td>
           <td >
-            {this.props.bought}
+            ${this.props.bought}.00
           </td>
           <td >
-            {this.props.saved}
+            ${this.props.saved}.00
           </td>
         </tr>
       )
