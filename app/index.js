@@ -28,6 +28,7 @@ class Calculator extends React.Component {
     this.setState({
       carCurrentValue: cv,
       carNewValue: nv,
+      pv: amountToBorrow
       // pv: amountToBorrow
     })
   }

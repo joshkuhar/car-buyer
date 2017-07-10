@@ -9814,7 +9814,8 @@ var Calculator = function (_React$Component) {
       var amountToBorrow = (0, _helpers.difference)(cv, nv);
       this.setState({
         carCurrentValue: cv,
-        carNewValue: nv
+        carNewValue: nv,
+        pv: amountToBorrow
         // pv: amountToBorrow
       });
     }
