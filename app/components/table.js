@@ -34,8 +34,13 @@ class Table extends React.Component {
         		</tr>
         	</thead>
 	        <TableList 
-						rate={this.props.rate}
-						amt={this.props.amt}
+	          cv={this.props.carCurrentValue}
+	          nv={this.props.carNewValue}
+	          nper={this.props.nper}
+	          rate={this.props.rate}
+	          pv={this.props.pv}
+	          ar={this.props.ar}
+					  ih={this.props.ih}
 	        />
         </table>
       </div>
@@ -49,12 +54,6 @@ export default Table
 /*
 
 
-        <table className='table-container'>
-          <Rows 
-            colors={this.state.colors}
-            onDelete={this._onDelete}
-          />
-       </table>
 
 
 

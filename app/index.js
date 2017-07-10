@@ -14,18 +14,21 @@ class Calculator extends React.Component {
     super(props)
     this._didClick = this._didClick.bind(this)
     this.state = {
-      currentValue: null,
-      newValue: null,
-      rate: .04,
-      loanAmt: null
+      carCurrentValue: null,
+      carNewValue: null,
+      nper: 60,
+      rate: 4,
+      pv: 30000,
+      ar: 7.5,
+      ih: 20
     }
   }
   _didClick(cv,nv){
     const amountToBorrow = difference(cv,nv)
     this.setState({
-      currentValue: cv,
-      newValue: nv,
-      loanAmt: amountToBorrow
+      carCurrentValue: cv,
+      carNewValue: nv,
+      // pv: amountToBorrow
     })
   }
   render() {
@@ -35,11 +38,13 @@ class Calculator extends React.Component {
           didClick={this._didClick}
         />
         <Table 
-          price={this.state.price}
-          cv={this.state.currentValue}
-          nv={this.state.newValue}
+          cv={this.state.carCurrentValue}
+          nv={this.state.carNewValue}
+          nper={this.state.nper}
           rate={this.state.rate}
-          amt={this.state.loanAmt}
+          pv={this.state.pv}
+          ar={this.state.ar}
+          ih={this.state.ih}
         />
       </div>
       )

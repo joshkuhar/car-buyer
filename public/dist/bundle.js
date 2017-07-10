@@ -9797,10 +9797,13 @@ var Calculator = function (_React$Component) {
 
     _this._didClick = _this._didClick.bind(_this);
     _this.state = {
-      currentValue: null,
-      newValue: null,
-      rate: .04,
-      loanAmt: null
+      carCurrentValue: null,
+      carNewValue: null,
+      nper: 60,
+      rate: 4,
+      pv: 30000,
+      ar: 7.5,
+      ih: 20
     };
     return _this;
   }
@@ -9810,9 +9813,9 @@ var Calculator = function (_React$Component) {
     value: function _didClick(cv, nv) {
       var amountToBorrow = (0, _helpers.difference)(cv, nv);
       this.setState({
-        currentValue: cv,
-        newValue: nv,
-        loanAmt: amountToBorrow
+        carCurrentValue: cv,
+        carNewValue: nv
+        // pv: amountToBorrow
       });
     }
   }, {
@@ -9825,11 +9828,13 @@ var Calculator = function (_React$Component) {
           didClick: this._didClick
         }),
         _react2.default.createElement(_table2.default, {
-          price: this.state.price,
-          cv: this.state.currentValue,
-          nv: this.state.newValue,
+          cv: this.state.carCurrentValue,
+          nv: this.state.carNewValue,
+          nper: this.state.nper,
           rate: this.state.rate,
-          amt: this.state.loanAmt
+          pv: this.state.pv,
+          ar: this.state.ar,
+          ih: this.state.ih
         })
       );
     }
@@ -22567,8 +22572,13 @@ var Table = function (_React$Component) {
             )
           ),
           _react2.default.createElement(_tableList2.default, {
+            cv: this.props.carCurrentValue,
+            nv: this.props.carNewValue,
+            nper: this.props.nper,
             rate: this.props.rate,
-            amt: this.props.amt
+            pv: this.props.pv,
+            ar: this.props.ar,
+            ih: this.props.ih
           })
         )
       );
@@ -22583,12 +22593,6 @@ exports.default = Table;
 /*
 
 
-        <table className='table-container'>
-          <Rows 
-            colors={this.state.colors}
-            onDelete={this._onDelete}
-          />
-       </table>
 
 
 
@@ -22624,9 +22628,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-//console.log( "The calculated payment is: " + 
-// pmt(interest_rate/100/payments_per_year, payments_per_year * years, -loan_amount)
-// .toFixed(2) );
 var TableList = function (_React$Component) {
 	_inherits(TableList, _React$Component);
 
@@ -22639,27 +22640,54 @@ var TableList = function (_React$Component) {
 	_createClass(TableList, [{
 		key: 'render',
 		value: function render() {
-			var nper = 36; //length of loan in months
-			var rate = 4.5 / 100 / 12; //interest rate per month
-			var pv = 10000; //present value of loan
+			var nper = this.props.nper; //length of loan in months
+			var rate = this.props.rate / 100 / 12; //interest rate per month
+			var pv = this.props.pv; //present value of loan
+			var ar = this.props.ar / 100; //ar-annual rate
+			var ih = this.props.ih; //ih-investment horizon
+
+			// Auto loan
 			function pmt(rate, nper, pv) {
-				var pvif = Math.pow(1 + rate, 36);
+				var pvif = Math.pow(1 + rate, nper);
 				var pmt = rate / (pvif - 1) * -(pv * pvif);
 				return pmt;
 			}
-			console.log(pmt(rate, nper, -10000)); //make sure negative
-			var years = [];
-			var singleYear = this.props.rate * this.props.amt;
-			for (var i = 1; i < 21; i++) {
-				var rr = singleYear * i;
-				years.push(parseFloat(rr).toFixed(2));
+			var pymt = pmt(rate, nper, -pv); //make sure third arg is negative
+
+			// Compount Interest
+			function fv(rate, yrs, pv) {
+				var fv = pv;
+				for (var i = 0; i < yrs; i++) {
+					var yearlyInterest = fv * rate;
+					fv += yearlyInterest;
+				}
+				return fv;
 			}
+
+			var years = [];
+			var singleYear = pymt * 12;
+
+			for (var i = 1; i < 6; i++) {
+
+				var rr = singleYear * i;
+				var bought = parseFloat(rr).toFixed(2);
+
+				var invested = fv(ar, ih, rr);
+				var invested15 = fv(ar, ih - 15, rr);
+				var diff = invested - invested15;
+				var diffInvest = parseFloat(diff).toFixed(2);
+				years.push({
+					bought: bought,
+					invested: diffInvest
+				});
+			}
+
 			var paidPerYear = years.map(function (r, i) {
 				return _react2.default.createElement(_tableRow2.default, {
 					key: i,
 					year: i + 1,
-					bought: r,
-					saved: '$2000'
+					bought: r.bought,
+					saved: r.invested
 				});
 			});
 			return _react2.default.createElement(
@@ -22678,7 +22706,6 @@ exports.default = TableList;
 /*
 
 
-P = rate per period (present value) / 1 - (1 + rate per period) - number of payments
 */
 
 /***/ }),

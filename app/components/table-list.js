@@ -3,34 +3,58 @@
 import React from 'react';
 import Row from './table-row';
 
-
-//console.log( "The calculated payment is: " + 
-             // pmt(interest_rate/100/payments_per_year, payments_per_year * years, -loan_amount)
-             // .toFixed(2) );
 class TableList extends React.Component {
 	render(){		
-		const nper = 36 //length of loan in months
-		const rate = 4.5/100/12 //interest rate per month
-		const pv = 10000 //present value of loan
+		const nper = this.props.nper //length of loan in months
+		const rate = this.props.rate/100/12 //interest rate per month
+		const pv = this.props.pv //present value of loan
+		const ar = this.props.ar/100 //ar-annual rate
+		const ih = this.props.ih //ih-investment horizon
+
+		// Auto loan
 		function pmt(rate, nper, pv){
-			var pvif= Math.pow( 1 + rate, 36)
+			var pvif= Math.pow( 1 + rate, nper)
 			var pmt = rate / (pvif - 1) * -(pv*pvif);
 			return pmt
 		}
-		console.log(pmt(rate, nper, -10000)) //make sure negative
-		const years = []
-		const singleYear = this.props.rate*this.props.amt
-		for(var i=1;i<21;i++){
-			const rr = singleYear*i
-			years.push(parseFloat(rr).toFixed(2))
+		const pymt = pmt(rate,nper,-pv) //make sure third arg is negative
+
+		// Compount Interest
+		function fv(rate,yrs,pv) {
+			var fv = pv;
+			for(var i=0; i<yrs; i++){
+				var yearlyInterest = fv*rate
+				fv += yearlyInterest
+			}
+			return fv
 		}
+
+
+		const years = []
+		const singleYear = pymt*12
+
+		for(var i=1;i<6;i++){
+
+			const rr = singleYear*i
+			const bought = parseFloat(rr).toFixed(2)
+
+			const invested = fv(ar,ih,rr)
+			const invested15 = fv(ar,ih-15,rr)
+			const diff = invested - invested15
+			const diffInvest = parseFloat(diff).toFixed(2)
+			years.push({
+				bought: bought, 
+				invested: diffInvest
+			})
+		}
+
 		const paidPerYear = years.map( (r,i)=>{
 			return (
 				<Row 
 					key={i}
 					year={i+1}
-					bought={r}
-					saved='$2000'
+					bought={r.bought}
+					saved={r.invested}
 				/>
 				)
 		})
@@ -47,5 +71,4 @@ export default TableList
 /*
 
 
-P = rate per period (present value) / 1 - (1 + rate per period) - number of payments
 */
